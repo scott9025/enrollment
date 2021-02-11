@@ -9,9 +9,25 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
+library(janitor)
 ```
 
 ```{r}
-enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-10-2021.xlsx")
+# Load the data
+enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-10-2021.xlsx", 
+                         skip = 3)
+
+# Data cleaning
+enrollment <- enrollment %>% 
+  clean_names()
+  
+# Visualize
+enrollment %>% 
+  group_by(instructor_full_name) %>% 
+  summarize(total_stu = sum(total)) %>% 
+  arrange(desc(total_stu)) %>% 
+  slice(1:20)
+
+
 ```
 
