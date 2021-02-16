@@ -20,13 +20,27 @@ enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-10-2021.xl
 # Data cleaning
 enrollment <- enrollment %>% 
   clean_names()
+
+enrollment %>% 
+  select(course_name, total) %>% 
+  group_by(course_name) %>% 
+  summarize(sum_total = sum(total)) %>% 
+  arrange(desc(sum_total)) %>% 
+  slice(1:10) %>% 
+  ggplot(aes(x = fct_reorder(course_name,
+                             sum_total),
+             y = sum_total)) +
+  geom_col()
+
+enrollment %>% 
+  filter(course_name == "expos")
   
 # Visualize
-enrollment %>% 
-  group_by(instructor_full_name) %>% 
-  summarize(total_stu = sum(total)) %>% 
-  arrange(desc(total_stu)) %>% 
-  slice(1:20)
+#enrollment %>% 
+#  group_by(instructor_full_name) %>% 
+#  summarize(total_stu = sum(total)) %>% 
+#  arrange(desc(total_stu)) %>% 
+#  slice(1:20)
 
 
 ```
