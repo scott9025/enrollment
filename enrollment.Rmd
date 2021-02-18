@@ -1,12 +1,12 @@
 ---
-title: "Untitled"
+title: "Course Enrollment"
 author: "Scott Bek"
 date: '2021 2 11 '
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 library(tidyverse)
 library(readxl)
 library(janitor)
@@ -33,7 +33,7 @@ enrollment <- enrollment %>%
 
 ```
 ```{r}
-enrollment %>% 
+enrollment2 <- enrollment %>% 
   
   # Drop NAs for course_name
   
@@ -79,8 +79,13 @@ enrollment %>%
   labs(title = "Top 10 Most Popular Classes At Harvard",
        x = " ",
        y = "Total Enrollment",
-       caption = "Source: Harvard Registrar") +
+       caption = "Source: Harvard Registrar",
+       fill = "Totel Enrollment") +
   theme_classic()
+```
+```{r}
+ggsave(filename = "enrollment.png",
+       plot = enrollment2)
 ```
 
 
