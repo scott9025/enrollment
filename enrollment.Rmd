@@ -21,19 +21,7 @@ enrollment <- read_excel("raw_data/class_enrollment_summary_by_term_2-10-2021.xl
 enrollment <- enrollment %>% 
   clean_names()
 
-enrollment %>% 
-  select(course_name, total) %>% 
-  group_by(course_name) %>% 
-  summarize(sum_total = sum(total)) %>% 
-  arrange(desc(sum_total)) %>% 
-  slice(1:10) %>% 
-  ggplot(aes(x = fct_reorder(course_name,
-                             sum_total),
-             y = sum_total)) +
-  geom_col()
 
-enrollment %>% 
-  filter(course_name == "expos")
   
 # Visualize
 #enrollment %>% 
@@ -44,4 +32,55 @@ enrollment %>%
 
 
 ```
+```{r}
+enrollment %>% 
+  
+  # Drop NAs for course_name
+  
+  drop_na(course_name) %>% 
+  
+  # Select three variables of interest
+  
+  select(course_id, course_name, total) %>% 
+  
+  # Group by course_id, and within each course_id, by course_name
+  
+  group_by(course_id, course_name) %>% 
+  
+  # .groups = "drop" is needed in order for the plot to work
+  
+  summarize(sum_total = sum(total), .groups = "drop") %>% 
+  
+  # Order the output in descending order
+  
+  arrange(desc(sum_total)) %>% 
+  
+  # Slice the first 10 rows
+  
+  slice(1:10) %>% 
+  
+  # Order course_name by sum_total
+  
+  ggplot(aes(x = fct_reorder(course_name,
+                             sum_total),
+             y = sum_total,
+             
+             # Fill the bars based on the sum_total level
+             
+             fill = sum_total)) +
+  
+  # Used geom_col since we used both x and y
+  
+  geom_col() +
+  
+  # Flipped x and y axis
+  
+  coord_flip() +
+  labs(title = "Top 10 Most Popular Classes At Harvard",
+       x = " ",
+       y = "Total Enrollment",
+       caption = "Source: Harvard Registrar") +
+  theme_classic()
+```
+
 
